@@ -1,5 +1,7 @@
 package org.vincibean.parser.combinators
 
+import org.vincibean.parser.combinators.service.ParserService
+
 object Main extends ParserService {
 
   def main(args: Array[String]) {
