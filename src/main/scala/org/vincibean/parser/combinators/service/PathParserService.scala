@@ -16,10 +16,6 @@ trait PathParserService extends CommonParserService {
     }
   }
 
-  private def asPath(fs: Seq[String]) = if (fs.isEmpty) {
-    Paths.get("/")
-  } else {
-    Paths.get("/", fs: _*)
-  }
+  private def asPath(fs: Seq[String]) = Paths.get("/", fs: _*)
 
 }
