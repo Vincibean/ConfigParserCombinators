@@ -22,6 +22,14 @@ trait LineParserService
       booleanParser | numberParser | pathParser | arrayParser | stringValueParser)
     val keyValueLine: all.Parser[(Key, Ast.Val[_])] = P(
       (key ~ eq ~ value) ~/ space.rep(1) ~/ commentParser.?)
+    /*
+     * A cleaner solution would be:
+     *
+     *   P(keyValueLine.? ~/ commentParser.? ~/ newline.rep)
+     *
+     * but this ends up being a nightmare, performance-wise.
+     * The following solution instead behaves quite well (although we have to cast!)
+     */
     P((keyValueLine | commentParser) ~ newline.rep).map {
       case x: (_, _) => Option(x.asInstanceOf[(Key, Ast.Val[_])])
       case _         => None
