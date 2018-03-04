@@ -5,7 +5,7 @@ import fastparse.core
 import org.vincibean.parser.combinators.lexical
 import org.vincibean.parser.combinators.lexical.{Ast, Group, Header, Key}
 
-class GroupParserService extends LineParserService {
+trait GroupParserService extends LineParserService {
 
   val groupParser: core.Parser[Group[Ast.Val[_]], Char, String] = {
     val multiline: core.Parser[Map[Key, Ast.Val[_]], Char, String] =
