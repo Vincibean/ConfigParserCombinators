@@ -13,9 +13,11 @@ object Main {
     val space = P(" " | "\t" | newline)
 
     // String
-    val specialChar = " ;/[]=\r\n"
+    val specialChar = " \";/[]=\r\n"
     val strChars = P(CharsWhile(c => !specialChar.contains(c)))
     val string = P(strChars.rep.!)
+    val quote = P("\"")
+    val stringValue = P(quote ~ string ~ quote)
 
     // Number
     val digits = P(CharsWhileIn('0' to '9'))
@@ -44,7 +46,7 @@ object Main {
     // Path
     val slash = P("/")
     val path =
-      (slash ~ string).rep.map(x => x.filter(_.nonEmpty))
+      (slash ~ string).rep(1).map(x => x.filter(_.nonEmpty))
 
     // Comment
     val semicolon = P(";")
@@ -55,9 +57,9 @@ object Main {
     val keyValue = string.!
     val key = P(keyValue.!)
     val eq = space.rep(1) ~ "=" ~ space.rep(1)
-    val value = boolean | number | path | string
+    val value = boolean | number | path | stringValue
 
-    val keyValueLine = P(key ~ eq ~ value)
+    val keyValueLine = P(key ~ eq ~ value ~ space.rep(1) ~ comment.?)
     val line = P((keyValueLine | comment) ~ newline.rep)
 
     val multiline = line.rep
