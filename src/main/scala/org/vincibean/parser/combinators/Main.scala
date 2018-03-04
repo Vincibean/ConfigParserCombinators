@@ -52,7 +52,7 @@ object Main {
   // Path
   val slash = P("/")
   val path: core.Parser[Ast.Path[Path], Char, String] =
-    (slash ~ string).rep(1).map { x =>
+    (slash ~/ string).rep(1).map { x =>
       val fs = x.filter(_.nonEmpty)
       val path =
         if (fs.isEmpty)
@@ -74,16 +74,16 @@ object Main {
 
   // Summary
   val keyValue = string.!
-  val ovride = P("<" ~ string.! ~ ">")
+  val ovride = P("<" ~/ string.! ~/ ">")
   val key: core.Parser[Key, Char, String] = P(keyValue.! ~ ovride.?).map {
     case (k, ovr) => Key(k, ovr)
   }
-  val eq = P(space.rep(1) ~ "=" ~ space.rep(1))
+  val eq = P(space.rep(1) ~/ "=" ~/ space.rep(1))
   val value: all.Parser[Ast.Val[_]] = P(
     boolean | number | path | array | stringValue)
 
   val keyValueLine: all.Parser[(Key, Ast.Val[_])] = P(
-    key ~ eq ~ value ~ space.rep(1) ~ comment.?)
+    (key ~ eq ~ value) ~/ space.rep(1) ~/ comment.?)
   val line: all.Parser[Option[(Key, Ast.Val[_])]] =
     P((keyValueLine | comment) ~ newline.rep).map {
       case x: (Key, Ast.Val[_]) => Option(x)
@@ -94,10 +94,10 @@ object Main {
     line.rep.map(_.flatten.toMap)
 
   val header: core.Parser[Header, Char, String] =
-    P("[" ~ string ~ "]" ~ newline.rep(1)).map(h => Header(h))
+    P("[" ~/ string ~/ "]" ~/ newline.rep(1)).map(h => Header(h))
 
   val total: core.Parser[Group[Ast.Val[_]], Char, String] =
-    P(header ~ multiline ~ newline.rep).map {
+    P(header ~/ multiline ~/ newline.rep).map {
       case (h, kvs) =>
         Group(h, kvs)
     }
