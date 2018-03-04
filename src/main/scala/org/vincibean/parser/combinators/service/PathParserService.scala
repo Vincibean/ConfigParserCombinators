@@ -1,6 +1,6 @@
 package org.vincibean.parser.combinators.service
 
-import java.nio.file.Path
+import java.nio.file.{Path, Paths}
 
 import fastparse.all._
 import fastparse.core
@@ -12,13 +12,14 @@ trait PathParserService extends CommonParserService {
     val slash = P("/")
     (slash ~/ string).rep(1).map { x =>
       val fs = x.filter(_.nonEmpty)
-      val path =
-        if (fs.isEmpty)
-          java.nio.file.Paths.get("/")
-        else
-          java.nio.file.Paths.get("/", fs: _*)
-      Ast.Path(path)
+      Ast.Path(asPath(fs))
     }
+  }
+
+  private def asPath(fs: Seq[String]) = if (fs.isEmpty) {
+    Paths.get("/")
+  } else {
+    Paths.get("/", fs: _*)
   }
 
 }
