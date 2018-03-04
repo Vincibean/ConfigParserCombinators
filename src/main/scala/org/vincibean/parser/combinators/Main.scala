@@ -17,7 +17,8 @@ object Main {
     val strChars = P(CharsWhile(c => !specialChar.contains(c)))
     val string = P(strChars.rep.!)
     val quote = P("\"")
-    val stringValue = P(quote ~ string ~ quote)
+    val stringContent = P(CharsWhile(c => !"\"".contains(c)))
+    val stringValue = P(quote ~ stringContent.! ~ quote)
 
     // Number
     val digits = P(CharsWhileIn('0' to '9'))
@@ -78,7 +79,7 @@ object Main {
       multitotal.parseIterator(
         Source
           .fromFile(
-            "/Users/andrea/IdeaProjects/mine/Parser Combinators/src/main/resources/test_settings.conf")
+            "/Users/andrea/IdeaProjects/mine/Parser Combinators/src/main/resources/settings.conf")
           .getLines
           .map(_ + "\n")))
 
