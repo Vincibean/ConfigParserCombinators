@@ -1,5 +1,6 @@
 package org.vincibean.parser.combinators
 
+import fastparse.all
 import fastparse.all._
 
 import scala.io.Source
@@ -49,6 +50,10 @@ object Main {
     val path =
       (slash ~ string).rep(1).map(x => x.filter(_.nonEmpty))
 
+    // Array
+    val el = P(boolean | number | path | stringValue)
+    val array: all.Parser[Seq[Any]] = P(el.rep(sep = ","))
+
     // Comment
     val semicolon = P(";")
     val commentString = P(CharsWhile(c => !"\r\n\f".contains(c)))
@@ -59,7 +64,7 @@ object Main {
     val ovride = P("<" ~ string.! ~ ">")
     val key = P(keyValue.! ~ ovride.?)
     val eq = space.rep(1) ~ "=" ~ space.rep(1)
-    val value = boolean | number | path | stringValue
+    val value = P(boolean | number | path | array | stringValue)
 
     val keyValueLine = P(key ~ eq ~ value ~ space.rep(1) ~ comment.?)
     val line = P((keyValueLine | comment) ~ newline.rep)
