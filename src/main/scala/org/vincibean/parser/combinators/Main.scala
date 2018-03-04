@@ -13,7 +13,7 @@ object Main {
     val space = P(" " | "\t" | newline)
 
     // String
-    val specialChar = " \";/[]=\r\n"
+    val specialChar = " <>\";/[]=\r\n"
     val strChars = P(CharsWhile(c => !specialChar.contains(c)))
     val string = P(strChars.rep.!)
     val quote = P("\"")
@@ -55,7 +55,8 @@ object Main {
 
     // Summary
     val keyValue = string.!
-    val key = P(keyValue.!)
+    val ovride = P("<" ~ string.! ~ ">")
+    val key = P(keyValue.! ~ ovride.?)
     val eq = space.rep(1) ~ "=" ~ space.rep(1)
     val value = boolean | number | path | stringValue
 
