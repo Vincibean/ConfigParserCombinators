@@ -13,7 +13,7 @@ object Main {
     val space = P(" " | "\t" | newline)
 
     // String
-    val specialChar = " /[]=\r\n"
+    val specialChar = " ;/[]=\r\n"
     val strChars = P(CharsWhile(c => !specialChar.contains(c)))
     val string = P(strChars.rep.!)
 
@@ -46,13 +46,19 @@ object Main {
     val path =
       (slash ~ string).rep.map(x => x.filter(_.nonEmpty))
 
+    // Comment
+    val semicolon = P(";")
+    val commentString = P(CharsWhile(c => !"\r\n\f".contains(c)))
+    val comment = P(semicolon ~ commentString)
+
     // Summary
     val keyValue = P(CharIn(('a' to 'z') ++ ('A' to 'Z') :+ '_')).rep.!
     val key = P(keyValue.!)
     val eq = space ~ "=" ~ space
     val value = boolean | number | path | string
 
-    val line = P(key ~ eq ~ value ~ newline.rep(1))
+    val keyValueLine = P(key ~ eq ~ value)
+    val line = P((keyValueLine | comment) ~ newline.rep)
 
     val multiline = line.rep
 
