@@ -1,7 +1,6 @@
 package org.vincibean.parser.combinators
 
 import fastparse.all._
-import fastparse.core
 
 import scala.io.Source
 
@@ -14,8 +13,9 @@ object Main {
     val space = P(" " | "\t" | newline)
 
     // String
-    val alpha = P(CharIn(('a' to 'z') ++ ('A' to 'Z'))).rep.!
-    val string = alpha
+    val specialChar = " /[]=\r\n"
+    val strChars = P(CharsWhile(c => !specialChar.contains(c)))
+    val string = P(strChars.rep.!)
 
     // Number
     val digits = P(CharsWhileIn('0' to '9'))
@@ -44,7 +44,7 @@ object Main {
     // Path
     val slash = P("/")
     val path =
-      (slash ~ alpha).rep.map(x => x.filter(_.nonEmpty))
+      (slash ~ string).rep.map(x => x.filter(_.nonEmpty))
 
     // Summary
     val keyValue = P(CharIn(('a' to 'z') ++ ('A' to 'Z') :+ '_')).rep.!
