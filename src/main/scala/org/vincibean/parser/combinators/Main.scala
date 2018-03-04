@@ -52,9 +52,9 @@ object Main {
     val comment = P(semicolon ~ commentString)
 
     // Summary
-    val keyValue = P(CharIn(('a' to 'z') ++ ('A' to 'Z') :+ '_')).rep.!
+    val keyValue = string.!
     val key = P(keyValue.!)
-    val eq = space ~ "=" ~ space
+    val eq = space.rep(1) ~ "=" ~ space.rep(1)
     val value = boolean | number | path | string
 
     val keyValueLine = P(key ~ eq ~ value)
