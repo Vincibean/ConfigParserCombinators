@@ -1,3 +1,5 @@
 package org.vincibean.parser.combinators
 
-case class Config(settings: Group[_]*) extends AnyVal
+import scala.collection.immutable.Seq
+
+case class Config(settings: Seq[Group[_]]) extends AnyVal

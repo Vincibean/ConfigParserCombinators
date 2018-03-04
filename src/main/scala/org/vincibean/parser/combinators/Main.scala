@@ -103,19 +103,18 @@ object Main {
     }
 
   val multitotal: core.Parser[Config, Char, String] = total.rep.map { x =>
-    Config(x: _*)
+    Config(x.toVector)
   }
 
-  def loadConfig(
-      filePath: String,
-      overrides: List[(String, String)]): core.Parsed[Config, Char, String] = {
+  def loadConfig(filePath: String,
+                 overrides: List[(String, String)]): Config = {
+    val fileContent = Source.fromFile(filePath).getLines.map(_ + "\n")
     multitotal
-      .parseIterator(
-        Source
-          .fromFile(
-            "/Users/andrea/IdeaProjects/mine/Parser Combinators/src/main/resources/settings.conf")
-          .getLines
-          .map(_ + "\n"))
+      .parseIterator(fileContent)
+      .fold[Config](
+        (_, _, _) => Config(Vector.empty[Group[_]]),
+        (c: Config, _) => c
+      )
   }
 
 }
