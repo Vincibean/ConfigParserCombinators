@@ -13,6 +13,7 @@ object Main extends ParserService {
     println(config("ftp.enabled"))
     println(config("ftp[‘path’]"))
     println(config.ftp.path)
+    println(config("ftp"))
 
   }
 

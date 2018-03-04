@@ -27,7 +27,7 @@ case class Config[V <: Ast.Val[_]](
 
   val group2setting: Map[String, Config.InnerSetting] = groups.map { g =>
     val k = g.name.name
-    val v = Config.InnerSetting(preferredSettings(g.settings.toVector).toMap)
+    val v = Config.InnerSetting(preferredSettings(g.settings.toVector))
     k -> v
   }.toMap
 
@@ -50,16 +50,16 @@ case class Config[V <: Ast.Val[_]](
       group2setting(ss).settings
   }
 
-  private def preferredSettings(kvs: Seq[(Key, V)]): Set[(String, Any)] = {
-    val ovrSet = linearizedOverrides.toSet
+  private def preferredSettings(kvs: Seq[(Key, V)]): Map[String, Any] = {
+    val ovrSet = linearizedOverrides.reverse.toSet
     val xs: Set[(String, Any)] = for {
       ovr <- ovrSet
       (k, v) <- kvs
       ovr2 <- k.ovride
       if ovr == ovr2
     } yield (k.key, v.value)
-    val xs2 = kvs.map { case (k, v) => k.key -> v.value }.toSet
-    xs ++ xs2
+    val xs2 = kvs.map { case (k, v) => k.key -> v.value }.toMap
+    xs2 ++ xs.toMap
   }
 
 }
