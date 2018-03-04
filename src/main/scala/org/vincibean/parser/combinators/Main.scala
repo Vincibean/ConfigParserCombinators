@@ -86,8 +86,8 @@ object Main {
     (key ~ eq ~ value) ~/ space.rep(1) ~/ comment.?)
   val line: all.Parser[Option[(Key, Ast.Val[_])]] =
     P((keyValueLine | comment) ~ newline.rep).map {
-      case x: (Key, Ast.Val[_]) => Option(x)
-      case _                    => None
+      case x: (_, _) => Option(x.asInstanceOf[(Key, Ast.Val[_])])
+      case _         => None
     }
 
   val multiline: core.Parser[Map[Key, Ast.Val[_]], Char, String] =
