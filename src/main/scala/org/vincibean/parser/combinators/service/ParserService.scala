@@ -7,14 +7,15 @@ import scala.io.Source
 
 trait ParserService extends ConfigParserService {
 
-  def loadConfig(filePath: String,
-                 overrides: List[(String, String)]): Config = {
+  def loadConfig[V <: Ast.Val[_]](
+      filePath: String,
+      overrides: List[(String, String)]): Config[Ast.Val[_]] = {
     val fileContent = Source.fromFile(filePath).getLines.map(_ + "\n")
-    configParser
+    configParser(overrides)
       .parseIterator(fileContent)
-      .fold[Config](
-        (_, _, _) => lexical.Config(Vector.empty[Group[_]]),
-        (c: Config, _) => c
+      .fold(
+        (_, _, _) => lexical.Config(Vector.empty, overrides),
+        (c, _) => c
       )
   }
 

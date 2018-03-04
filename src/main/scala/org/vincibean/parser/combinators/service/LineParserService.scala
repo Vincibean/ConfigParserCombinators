@@ -11,7 +11,7 @@ trait LineParserService
     with PathParserService
     with ArrayParserService {
 
-  val lineParser: all.Parser[Option[(Key, Ast.Val[_])]] = {
+  val lineParser: core.Parser[Option[(Key, Ast.Val[_])], Char, String] = {
     val keyValue = string.!
     val ovride = P("<" ~/ string.! ~/ ">")
     val key: core.Parser[Key, Char, String] = P(keyValue.! ~ ovride.?).map {
@@ -20,8 +20,7 @@ trait LineParserService
     val eq = P(space.rep(1) ~/ "=" ~/ space.rep(1))
     val value: all.Parser[Ast.Val[_]] = P(
       booleanParser | numberParser | pathParser | arrayParser | stringValueParser)
-    val keyValueLine: all.Parser[(Key, Ast.Val[_])] = P(
-      (key ~ eq ~ value) ~/ space.rep(1) ~/ commentParser.?)
+    val keyValueLine = P((key ~ eq ~ value) ~/ space.rep(1) ~/ commentParser.?)
     /*
      * A cleaner solution would be:
      *
