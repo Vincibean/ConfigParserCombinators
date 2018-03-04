@@ -18,7 +18,7 @@ object Main {
   }
 
   // Space
-  val newline = P("\n" | "\r\n" | "\r" | "\f")
+  val newline = P(StringIn("\n", "\r\n", "\r", "\f"))
   val space = P(" " | "\t" | newline)
 
   // String
@@ -86,7 +86,7 @@ object Main {
     key ~ eq ~ value ~ space.rep(1) ~ comment.?)
   val line: all.Parser[Option[(Key, Ast.Val[_])]] =
     P((keyValueLine | comment) ~ newline.rep).map {
-      case x: (Key, Ast.Val[_]) => Some(x)
+      case x: (Key, Ast.Val[_]) => Option(x)
       case _                    => None
     }
 
