@@ -9,7 +9,7 @@ trait StringParserService {
   val stringValueParser: core.Parser[Ast.Str, Char, String] = {
     val quote = P("\"")
     val stringContent = P(CharsWhile(c => !"\"".contains(c)))
-    P(quote ~ stringContent.! ~ quote).map(s => Ast.Str(s))
+    P(quote ~ stringContent.rep.! ~ quote).map(s => Ast.Str(s))
   }
 
 }
