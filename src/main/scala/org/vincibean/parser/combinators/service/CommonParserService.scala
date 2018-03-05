@@ -7,7 +7,7 @@ trait CommonParserService {
   // Spaces
   val newline: all.Parser[Unit] = P(StringIn("\n", "\r\n", "\r", "\f"))
   val space: all.Parser[Unit] = P(" " | "\t" | newline)
-  private val specialChar = " <>\";/[]=\r\n"
+  val specialChar = " <>\";/[]=\r\n"
   private val strChars = P(CharsWhile(c => !specialChar.contains(c)))
   val string: all.Parser[String] = P(strChars.rep.!)
 
