@@ -24,7 +24,7 @@ trait ParserService extends ConfigParserService {
       }
       .opt
       .flatten
-      .getOrElse(lexical.Config(Vector.empty, overrides))
+      .getOrElse(new lexical.Config(Vector.empty, overrides))
   }
 
 }

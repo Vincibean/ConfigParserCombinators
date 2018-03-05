@@ -13,9 +13,8 @@ object Config {
   }
 }
 
-case class Config[V <: Ast.Val[_]](
-    groups: Seq[Group[V]],
-    private val overrides: List[(String, String)])
+class Config[V <: Ast.Val[_]](groups: Seq[Group[V]],
+                              overrides: List[(String, String)])
     extends Dynamic {
   private val withSquaresRegex = """(\w+)\[‘(\w+)’\]"""
 
@@ -25,14 +24,16 @@ case class Config[V <: Ast.Val[_]](
     prefOvr ++ defOvr
   }
 
-  val group2setting: Map[String, Config.InnerSetting] = groups.map { g =>
+  val groupSettings: Map[String, Config.InnerSetting] = groups.map { g =>
     val k = g.name.name
     val v = Config.InnerSetting(preferredSettings(g.settings.toVector))
     k -> v
   }.toMap
 
+  override val toString: String = groupSettings.toString()
+
   def selectDynamic(name: String): Config.InnerSetting = {
-    group2setting(name)
+    groupSettings(name)
   }
 
   // We do exactly like the exercise asks: return a different type based on the input (!)
@@ -41,13 +42,13 @@ case class Config[V <: Ast.Val[_]](
       val as = xs.split('.')
       val group = as.head
       val key = as(1)
-      group2setting(group).settings(key)
+      groupSettings(group).settings(key)
     case xs if xs.matches(withSquaresRegex) =>
       val r = withSquaresRegex.r
       val r(group, key) = xs
-      group2setting(group).settings(key)
+      groupSettings(group).settings(key)
     case ss =>
-      group2setting(ss).settings
+      groupSettings(ss).settings
   }
 
   private def preferredSettings(kvs: Seq[(Key, V)]): Map[String, Any] = {

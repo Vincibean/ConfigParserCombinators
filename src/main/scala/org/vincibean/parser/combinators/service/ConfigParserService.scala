@@ -10,7 +10,7 @@ trait ConfigParserService extends GroupParserService {
   def configParser[V <: Ast.Val[_]](overrides: List[(String, String)])
     : core.Parser[Config[Ast.Val[_]], Char, String] =
     groupParser.rep.map { x =>
-      lexical.Config(x.toVector, overrides)
+      new lexical.Config(x.toVector, overrides)
     }
 
 }
