@@ -6,7 +6,6 @@ import org.vincibean.parser.combinators.lexical.Ast
 
 trait BooleanParserService {
 
-  // TODO 0 & 1 shouldn't be considered numbers!
   val booleanParser: core.Parser[Ast.SingleVal[Boolean], Char, String] =
     P(StringIn("true", "false", "yes", "no", "0", "1").!).map {
       case "true" | "yes" | "1" => Ast.True
