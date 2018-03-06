@@ -25,18 +25,22 @@ class ArrayParserServiceSpec
     implicit val strings: Arbitrary[Seq[String]] = Arbitrary(
       Gen.listOf(Gen.alphaNumStr))
     prop { (a: Seq[String]) =>
-      val input = a.map(s => s""""$s"""").mkString(",")
-      val res = arrayParser.parse(input)
-      (res must beAnInstanceOf[Parsed.Success[Seq[String]]]) and (res.get.value.wrapped
-        .map(_.wrapped) must beEqualTo(a))
+      (a.length > 1) ==> {
+        val input = a.map(s => s""""$s"""").mkString(",")
+        val res = arrayParser.parse(input)
+        (res must beAnInstanceOf[Parsed.Success[Seq[String]]]) and (res.get.value.wrapped
+          .map(_.wrapped) must beEqualTo(a))
+      }
     }
   }
 
   val p2 = {
     prop { (a: Seq[Double]) =>
-      val res = arrayParser.parse(a.mkString(","))
-      (res must beAnInstanceOf[Parsed.Success[Seq[Double]]]) and (res.get.value.wrapped
-        .map(_.wrapped) must beEqualTo(a))
+      (a.length > 1) ==> {
+        val res = arrayParser.parse(a.mkString(","))
+        (res must beAnInstanceOf[Parsed.Success[Seq[Double]]]) and (res.get.value.wrapped
+          .map(_.wrapped) must beEqualTo(a))
+      }
     }
   }
 
@@ -44,17 +48,21 @@ class ArrayParserServiceSpec
     implicit val ass: Arbitrary[Seq[String]] = Arbitrary(
       Gen.listOf(Gen.oneOf(Seq("true", "yes", "1", "false", "no", "0"))))
     prop { (a: Seq[String]) =>
-      val res = arrayParser.parse(a.mkString(","))
-      (res must beAnInstanceOf[Parsed.Success[Seq[Boolean]]]) and (res.get.value.wrapped
-        .map(_.wrapped) must beEqualTo(a))
+      (a.length > 1) ==> {
+        val res = arrayParser.parse(a.mkString(","))
+        (res must beAnInstanceOf[Parsed.Success[Seq[Boolean]]]) and (res.get.value.wrapped
+          .map(_.wrapped) must beEqualTo(a))
+      }
     }
   }
 
   val p4 = {
     prop { (a: Seq[JPath]) =>
-      val res = arrayParser.parse(a.mkString(","))
-      (res must beAnInstanceOf[Parsed.Success[Seq[JPath]]]) and (res.get.value.wrapped
-        .map(_.wrapped) must beEqualTo(a))
+      (a.length > 1) ==> {
+        val res = arrayParser.parse(a.mkString(","))
+        (res must beAnInstanceOf[Parsed.Success[Seq[JPath]]]) and (res.get.value.wrapped
+          .map(_.wrapped) must beEqualTo(a))
+      }
     }
   }
 

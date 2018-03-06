@@ -12,7 +12,7 @@ trait ArrayParserService
 
   val arrayParser: core.Parser[Ast.Arr[Ast.SingleVal[_]], Char, String] = {
     val el = P(booleanParser | numberParser | pathParser | stringValueParser)
-    P(el.rep(sep = ",")).map(els => Ast.Arr(els.toList))
+    P(el.rep(min = 2, sep = ",")).map(els => Ast.Arr(els.toList))
   }
 
 }
