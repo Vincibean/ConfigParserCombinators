@@ -15,8 +15,9 @@ class StringParserServiceSpec
     """
 
   val p1 = prop { (a: String) =>
-    stringValueParser.parse(s""""$a"""") must beAnInstanceOf[
-      Parsed.Success[String]]
+    val res = stringValueParser.parse(s""""$a"""")
+    (res must beAnInstanceOf[Parsed.Success[String]]) and (res.get.value.value must beEqualTo(
+      a))
   }
 
 }
