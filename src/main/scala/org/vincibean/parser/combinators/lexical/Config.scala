@@ -25,7 +25,7 @@ class Config[V <: Ast.Val[_]](groups: Seq[Group[V]],
   }
 
   val groupSettings: Map[String, Config.InnerSetting] = groups.map { g =>
-    val k = g.name.name
+    val k = g.header.name
     val v = Config.InnerSetting(preferredSettings(g.settings.toVector))
     k -> v
   }.toMap
