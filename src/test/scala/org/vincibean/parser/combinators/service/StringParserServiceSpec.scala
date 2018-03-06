@@ -14,10 +14,14 @@ class StringParserServiceSpec
           parse any quoted string $p1
     """
 
-  val p1 = prop { (a: String) =>
-    val res = stringValueParser.parse(s""""$a"""")
-    (res must beAnInstanceOf[Parsed.Success[String]]) and (res.get.value.wrapped must beEqualTo(
-      a))
+  val p1 = {
+    prop { (a: String) =>
+      (!a.contains("\"")) ==> {
+        val res = stringValueParser.parse(s""""$a"""")
+        (res must beAnInstanceOf[Parsed.Success[String]]) and (res.get.value.wrapped must beEqualTo(
+          a))
+      }
+    }
   }
 
 }
