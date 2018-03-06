@@ -12,14 +12,25 @@ class BooleanParserServiceSpec
   override def is =
     s2"""
         BooleanParserService can
-          parse any of the following values: "true", "false", "yes", "no", "0", "1" $p1
+          parse any of the following values: "true", "yes", "1" $p1
+          parse any of the following values: "false", "no", "0" $p2
     """
 
   val p1 = {
     implicit val a: Arbitrary[String] = Arbitrary(
-      Gen.oneOf(Seq("true", "false", "yes", "no", "0", "1")))
+      Gen.oneOf(Seq("true", "yes", "1")))
     prop { (a: String) =>
-      booleanParser.parse(a) must beAnInstanceOf[Parsed.Success[Boolean]]
+      val res = booleanParser.parse(a)
+      (res must beAnInstanceOf[Parsed.Success[Boolean]]) and (res.get.value.value must beTrue)
+    }
+  }
+
+  val p2 = {
+    implicit val a: Arbitrary[String] = Arbitrary(
+      Gen.oneOf(Seq("false", "no", "0")))
+    prop { (a: String) =>
+      val res = booleanParser.parse(a)
+      (res must beAnInstanceOf[Parsed.Success[Boolean]]) and (res.get.value.value must beFalse)
     }
   }
 
