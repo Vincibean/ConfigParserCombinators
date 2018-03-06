@@ -22,7 +22,7 @@ class ArrayParserServiceSpec
     """
 
   val p1 = {
-    implicit val ass: Arbitrary[Seq[String]] = Arbitrary(
+    implicit val strings: Arbitrary[Seq[String]] = Arbitrary(
       Gen.listOf(Gen.alphaNumStr))
     prop { (a: Seq[String]) =>
       val input = a.map(s => s""""$s"""").mkString(",")
