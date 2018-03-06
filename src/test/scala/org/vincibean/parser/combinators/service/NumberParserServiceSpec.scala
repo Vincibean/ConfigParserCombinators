@@ -15,9 +15,11 @@ class NumberParserServiceSpec
     """
 
   val p1 = prop { (a: Double) =>
-    a != 0 && a != 1 ==>
-      (numberParser.parse(a.toString) must beAnInstanceOf[
-        Parsed.Success[Double]])
+    (a != 0 && a != 1) ==> {
+      val res = numberParser.parse(a.toString)
+      (res must beAnInstanceOf[Parsed.Success[Double]]) and (res.get.value.value must beEqualTo(
+        a))
+    }
   }
 
 }
