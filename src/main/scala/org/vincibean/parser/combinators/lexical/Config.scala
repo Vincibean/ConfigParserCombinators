@@ -58,8 +58,8 @@ class Config[V <: Ast.Val[_]](groups: Seq[Group[V]],
       (k, v) <- kvs
       ovr2 <- k.ovride
       if ovr == ovr2
-    } yield (k.key, v.value)
-    val xs2 = kvs.map { case (k, v) => k.key -> v.value }.toMap
+    } yield (k.key, v.wrapped)
+    val xs2 = kvs.map { case (k, v) => k.key -> v.wrapped }.toMap
     xs2 ++ xs.toMap
   }
 

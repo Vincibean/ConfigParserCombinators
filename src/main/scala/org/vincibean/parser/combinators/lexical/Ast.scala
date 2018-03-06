@@ -1,29 +1,30 @@
 package org.vincibean.parser.combinators.lexical
 
+import java.nio.file.{Path => JPath}
 import scala.collection.immutable.Seq
 
 object Ast {
 
   sealed trait Val[A] {
-    def value: A
+    def wrapped: A
   }
 
   sealed trait SingleVal[A] extends Val[A]
 
-  final case class Str(value: String) extends SingleVal[String]
+  final case class Str(wrapped: String) extends SingleVal[String]
 
-  final case class Num(value: Double) extends SingleVal[Double]
+  final case class Num(wrapped: Double) extends SingleVal[Double]
 
-  final case class Path[T <: java.nio.file.Path](value: T) extends SingleVal[T]
+  final case class Path[T <: JPath](wrapped: T) extends SingleVal[T]
 
   final case object False extends SingleVal[Boolean] {
-    def value: Boolean = false
+    def wrapped: Boolean = false
   }
 
   final case object True extends SingleVal[Boolean] {
-    def value: Boolean = true
+    def wrapped: Boolean = true
   }
 
-  final case class Arr[V <: SingleVal[_]](value: Seq[V]) extends Val[Seq[V]]
+  final case class Arr[V <: SingleVal[_]](wrapped: Seq[V]) extends Val[Seq[V]]
 
 }

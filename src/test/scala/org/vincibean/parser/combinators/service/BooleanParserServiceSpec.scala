@@ -21,7 +21,7 @@ class BooleanParserServiceSpec
       Gen.oneOf(Seq("true", "yes", "1")))
     prop { (a: String) =>
       val res = booleanParser.parse(a)
-      (res must beAnInstanceOf[Parsed.Success[Boolean]]) and (res.get.value.value must beTrue)
+      (res must beAnInstanceOf[Parsed.Success[Boolean]]) and (res.get.value.wrapped must beTrue)
     }
   }
 
@@ -30,7 +30,7 @@ class BooleanParserServiceSpec
       Gen.oneOf(Seq("false", "no", "0")))
     prop { (a: String) =>
       val res = booleanParser.parse(a)
-      (res must beAnInstanceOf[Parsed.Success[Boolean]]) and (res.get.value.value must beFalse)
+      (res must beAnInstanceOf[Parsed.Success[Boolean]]) and (res.get.value.wrapped must beFalse)
     }
   }
 
