@@ -15,6 +15,7 @@ class CommonParserServiceSpec
           parse any newline character $p1
           parse any space character $p2
           parse any allowed string $p3
+          parse any commented string $p4
     """
 
   val p1 = {
@@ -36,6 +37,10 @@ class CommonParserServiceSpec
   val p3 = prop { (a: String) =>
     (!specialChar.contains(a)) ==>
       (string.parse(a) must beAnInstanceOf[Parsed.Success[Unit]])
+  }
+
+  val p4 = prop { (a: String) =>
+    string.parse(";" + a) must beAnInstanceOf[Parsed.Success[Unit]]
   }
 
 }
