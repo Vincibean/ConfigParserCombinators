@@ -5,6 +5,7 @@ import java.nio.file.{Path => JPath}
 
 import fastparse.core.Parsed
 import org.scalacheck.{Arbitrary, Gen}
+import org.specs2.specification.core.SpecStructure
 import org.specs2.{ScalaCheck, Specification}
 import org.vincibean.parser.combinators.lexical.{Ast, Key}
 
@@ -14,7 +15,7 @@ class LineParserServiceSpec
     with LineParserService
     with ArbitraryJPath {
 
-  override def is =
+  override def is: SpecStructure =
     s2"""
         LineParserService can
           parse any line containing a String value $p1
@@ -27,7 +28,7 @@ class LineParserServiceSpec
           parse any line containing only a comment $p8
     """
 
-  val p1 = {
+  private val p1 = {
     implicit val s: Arbitrary[String] = Arbitrary(Gen.alphaNumStr)
 
     prop { (k: String, v: String) =>
@@ -39,7 +40,7 @@ class LineParserServiceSpec
     }
   }
 
-  val p2 = {
+  private val p2 = {
     implicit val s: Arbitrary[String] = Arbitrary(Gen.alphaNumStr)
 
     prop { (k: String, v: Double) =>
@@ -50,7 +51,7 @@ class LineParserServiceSpec
     }
   }
 
-  val p3 = {
+  private val p3 = {
     implicit val bs: Arbitrary[String] = Arbitrary(
       Gen.oneOf(Seq("true", "yes", "1")))
 
@@ -66,7 +67,7 @@ class LineParserServiceSpec
     }
   }
 
-  val p4 = {
+  private val p4 = {
     implicit val bs: Arbitrary[String] = Arbitrary(
       Gen.oneOf(Seq("false", "no", "0")))
 
@@ -82,7 +83,7 @@ class LineParserServiceSpec
     }
   }
 
-  val p5 = {
+  private val p5 = {
     implicit val s: Arbitrary[String] = Arbitrary(Gen.alphaNumStr)
 
     prop { (k: String, v: JPath) =>
@@ -93,7 +94,7 @@ class LineParserServiceSpec
     }
   }
 
-  val p6 = {
+  private val p6 = {
     implicit val s: Arbitrary[String] = Arbitrary(Gen.alphaNumStr)
 
     prop { (k: String, o: String, v: String) =>
@@ -111,7 +112,7 @@ class LineParserServiceSpec
     }
   }
 
-  val p7 = {
+  private val p7 = {
     implicit val s: Arbitrary[String] = Arbitrary(Gen.alphaNumStr)
 
     prop { (k: String, v: Double) =>
@@ -122,7 +123,7 @@ class LineParserServiceSpec
     }
   }
 
-  val p8 = prop { (c: String) =>
+  private val p8 = prop { (c: String) =>
     val input = s"; $c \n"
     val res = lineParser.parse(input)
     (res must beAnInstanceOf[ParsedSuccess[Option[(Key, Ast.Val[_])]]]) and

@@ -2,6 +2,7 @@ package org.vincibean.parser.combinators.service
 
 import fastparse.all.Parsed
 import org.scalacheck.{Arbitrary, Gen}
+import org.specs2.specification.core.SpecStructure
 import org.specs2.{ScalaCheck, Specification}
 
 class BooleanParserServiceSpec
@@ -9,14 +10,14 @@ class BooleanParserServiceSpec
     with ScalaCheck
     with BooleanParserService {
 
-  override def is =
+  override def is: SpecStructure =
     s2"""
         BooleanParserService can
           parse any of the following values: "true", "yes", "1" $p1
           parse any of the following values: "false", "no", "0" $p2
     """
 
-  val p1 = {
+  private val p1 = {
     implicit val a: Arbitrary[String] = Arbitrary(
       Gen.oneOf(Seq("true", "yes", "1")))
     prop { (a: String) =>
@@ -25,7 +26,7 @@ class BooleanParserServiceSpec
     }
   }
 
-  val p2 = {
+  private val p2 = {
     implicit val a: Arbitrary[String] = Arbitrary(
       Gen.oneOf(Seq("false", "no", "0")))
     prop { (a: String) =>

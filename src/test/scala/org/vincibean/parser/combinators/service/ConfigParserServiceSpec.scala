@@ -2,6 +2,7 @@ package org.vincibean.parser.combinators.service
 
 import fastparse.all.Parsed
 import org.scalacheck.{Arbitrary, Gen}
+import org.specs2.specification.core.SpecStructure
 import org.specs2.{ScalaCheck, Specification}
 import org.vincibean.parser.combinators.lexical.{Ast, Config}
 
@@ -10,7 +11,7 @@ class ConfigParserServiceSpec
     with ScalaCheck
     with ConfigParserService {
 
-  override def is =
+  override def is: SpecStructure =
     s2"""
         GroupParserService can (no overrides)
           successfully parse any Group $p1
@@ -27,7 +28,7 @@ class ConfigParserServiceSpec
 
   private implicit val s: Arbitrary[String] = Arbitrary(Gen.alphaNumStr)
 
-  val p1 =
+  private val p1 =
     prop { (s: String, k: String, v: Double) =>
       (s.nonEmpty && k.nonEmpty) ==> {
         val input = s"[$s]\n$k = $v\n"
@@ -36,13 +37,13 @@ class ConfigParserServiceSpec
       }
     }
 
-  val p2 = prop { (v: Double) =>
+  private val p2 = prop { (v: Double) =>
     val input = s"[mygroup]\nmykey = $v\n"
     val config = configParser(Nil).parse(input).get.value
     config.mygroup.mykey must beEqualTo(v)
   }
 
-  val p3 = prop { (s: String, k: String, o: String, v: Double) =>
+  private val p3 = prop { (s: String, k: String, o: String, v: Double) =>
     (s.nonEmpty && k.nonEmpty) ==> {
       val input = s"[$s]\n$k<$o> = $v\n$k = ${v + 1}\n"
       val res = configParser(List(o -> "i-should-not-exist")).parse(input)
@@ -50,7 +51,7 @@ class ConfigParserServiceSpec
     }
   }
 
-  val p4 = prop { (s: String, k: String, o: String, v: Double) =>
+  private val p4 = prop { (s: String, k: String, o: String, v: Double) =>
     (s.nonEmpty && k.nonEmpty) ==> {
       val input = s"[$s]\n$k<$o> = $v\n$k = ${v + 1}\n"
       val res = configParser(List("i-should-not-exist" -> o)).parse(input)
@@ -58,21 +59,21 @@ class ConfigParserServiceSpec
     }
   }
 
-  val p5 = prop { (o: String, v: Double) =>
+  private val p5 = prop { (o: String, v: Double) =>
     val input = s"[mygroup]\nmykey<$o> = $v\nmykey = ${v + 1}\n"
     val config =
       configParser(List(o -> "i-should-not-exist")).parse(input).get.value
     config.mygroup.mykey must beEqualTo(v)
   }
 
-  val p6 = prop { (o: String, v: Double) =>
+  private val p6 = prop { (o: String, v: Double) =>
     val input = s"[mygroup]\nmykey<$o> = $v\nmykey = ${v + 1}\n"
     val config =
       configParser(List("i-should-not-exist" -> o)).parse(input).get.value
     config.mygroup.mykey must beEqualTo(v)
   }
 
-  val p7 = prop { (s: String, k: String, o: String, v: Double) =>
+  private val p7 = prop { (s: String, k: String, o: String, v: Double) =>
     (s.nonEmpty && k.nonEmpty) ==> {
       val input = s"[$s]\n$k<$o> = $v\n$k = ${v + 1}\n"
       val config =
@@ -81,7 +82,7 @@ class ConfigParserServiceSpec
     }
   }
 
-  val p8 = prop { (s: String, k: String, o: String, v: Double) =>
+  private val p8 = prop { (s: String, k: String, o: String, v: Double) =>
     (s.nonEmpty && k.nonEmpty) ==> {
       val input = s"[$s]\n$k<$o> = $v\n$k = ${v + 1}\n"
       val config =
@@ -90,7 +91,7 @@ class ConfigParserServiceSpec
     }
   }
 
-  val p9 = prop { (s: String, k: String, o: String, v: Double) =>
+  private val p9 = prop { (s: String, k: String, o: String, v: Double) =>
     (s.nonEmpty && k.nonEmpty) ==> {
       val input = s"[$s]\n$k<$o> = $v\n$k = ${v + 1}\n"
       val config =

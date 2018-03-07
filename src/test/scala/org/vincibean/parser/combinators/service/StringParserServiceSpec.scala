@@ -1,6 +1,7 @@
 package org.vincibean.parser.combinators.service
 
 import fastparse.all.Parsed
+import org.specs2.specification.core.SpecStructure
 import org.specs2.{ScalaCheck, Specification}
 
 class StringParserServiceSpec
@@ -8,13 +9,13 @@ class StringParserServiceSpec
     with ScalaCheck
     with StringParserService {
 
-  override def is =
+  override def is: SpecStructure =
     s2"""
         StringParserService can
           parse any quoted string $p1
     """
 
-  val p1 = {
+  private val p1 = {
     prop { (a: String) =>
       (!a.contains("\"")) ==> {
         val res = stringValueParser.parse(s""""$a"""")

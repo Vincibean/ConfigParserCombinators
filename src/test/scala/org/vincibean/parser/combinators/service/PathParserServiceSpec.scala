@@ -3,6 +3,7 @@ package org.vincibean.parser.combinators.service
 import java.nio.file.{Path => JPath}
 
 import fastparse.all.Parsed
+import org.specs2.specification.core.SpecStructure
 import org.specs2.{ScalaCheck, Specification}
 
 class PathParserServiceSpec
@@ -11,13 +12,13 @@ class PathParserServiceSpec
     with PathParserService
     with ArbitraryJPath {
 
-  override def is =
+  override def is: SpecStructure =
     s2"""
         PathParserService can
           parse any given *nix path of alphanumeric folder names $p1
     """
 
-  val p1 = prop { (a: JPath) =>
+  private val p1 = prop { (a: JPath) =>
     val res = pathParser.parse(a.toString)
     (res must beAnInstanceOf[Parsed.Success[JPath]]) and (res.get.value.wrapped.toString must beEqualTo(
       a.toString))

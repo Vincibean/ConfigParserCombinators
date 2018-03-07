@@ -7,11 +7,11 @@ import scala.util.Try
 
 class ParserServiceSpec extends Specification with ParserService {
 
-  val config = loadConfig(
+  private val config = loadConfig(
     this.getClass.getClassLoader.getResource("settings.conf").getFile,
     List("ubuntu" -> "production"))
 
-  val invalidConfig = loadConfig(
+  private val invalidConfig = loadConfig(
     this.getClass.getClassLoader.getResource("invalid-settings.conf").getFile,
     List("ubuntu" -> "production"))
 

@@ -2,6 +2,7 @@ package org.vincibean.parser.combinators.service
 
 import fastparse.all.Parsed
 import org.scalacheck.{Arbitrary, Gen}
+import org.specs2.specification.core.SpecStructure
 import org.specs2.{ScalaCheck, Specification}
 
 class CommonParserServiceSpec
@@ -9,7 +10,7 @@ class CommonParserServiceSpec
     with ScalaCheck
     with CommonParserService {
 
-  override def is =
+  override def is: SpecStructure =
     s2"""
         CommonParserService can
           parse any newline character $p1
@@ -18,7 +19,7 @@ class CommonParserServiceSpec
           parse any commented string $p4
     """
 
-  val p1 = {
+  private val p1 = {
     implicit val a: Arbitrary[String] = Arbitrary(
       Gen.oneOf(Seq("\n", "\r\n", "\r", "\f")))
     prop { (a: String) =>
@@ -26,7 +27,7 @@ class CommonParserServiceSpec
     }
   }
 
-  val p2 = {
+  private val p2 = {
     implicit val a: Arbitrary[String] = Arbitrary(
       Gen.oneOf(Seq("\n", "\r\n", "\r", "\f", " ", "\t")))
     prop { (a: String) =>
@@ -34,12 +35,12 @@ class CommonParserServiceSpec
     }
   }
 
-  val p3 = prop { (a: String) =>
+  private val p3 = prop { (a: String) =>
     (!specialChar.contains(a)) ==>
       (string.parse(a) must beAnInstanceOf[Parsed.Success[Unit]])
   }
 
-  val p4 = prop { (a: String) =>
+  private val p4 = prop { (a: String) =>
     string.parse(";" + a) must beAnInstanceOf[Parsed.Success[Unit]]
   }
 
