@@ -42,11 +42,11 @@ class Config[V <: Ast.Val[_]](groups: Seq[Group[V]],
       val as = xs.split('.')
       val group = as.head
       val key = as(1)
-      groupSettings(group).settings(key)
+      groupSettings(group).settings.getOrElse(key, None)
     case xs if xs.matches(withSquaresRegex) =>
       val r = withSquaresRegex.r
       val r(group, key) = xs
-      groupSettings(group).settings(key)
+      groupSettings(group).settings.getOrElse(key, None)
     case ss =>
       groupSettings(ss).settings
   }
