@@ -1,4 +1,4 @@
-name := "Parsing Combinators"
+name := "Parser Combinators"
 
 version := "0.1"
 
